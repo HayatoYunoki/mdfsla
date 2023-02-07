@@ -16,14 +16,14 @@ s_list = []
 
 
 class population:
-    frog_list = []
-    memeplex_list = [] * m
     def __init__(self):
         self.global_best_frog = individual()
         self.is_termination = False
         self.best_fitness = 0
         self.former_best_fitness = 0
         self.delta = 0
+        self.frog_list = []
+        self.memeplex_list = [0 for _ in range(m)]
 
     def init_population(self):
         for i in range(P):
@@ -32,6 +32,8 @@ class population:
     def calc_fitness_population(self):
         for i in range(P):
             self.frog_list[i].calc_fitness()
+        # for i in range(P):
+        #     print(self.frog_list[i].x)
     
     def sort_population(self):
         self.frog_list = sorted(self.frog_list, key=lambda frog: frog.fitness, reverse = True)
@@ -42,9 +44,14 @@ class population:
     def partition(self):
         for k in range(m):
             self.memeplex_list[k] = memeplex(self.global_best_frog)
-        for i in range(P/m):
-            for j in range(m):
+        for j in range(m):
+            for i in range(P//m):
                 self.memeplex_list[j].frog_in_memeplex[i] = self.frog_list[i*m + j]
+        # self.memeplex_list[0].frog_in_memeplex[0] = self.frog_list[0]
+     
+            
+        # print(self.memeplex_list[0].frog_in_memeplex[0].x)
+        # print(self.memeplex_list[9].frog_in_memeplex[0].x)
     
     def search(self):
         for i in range(m):
@@ -63,17 +70,18 @@ class population:
 
 
 class memeplex:
-    frog_in_memeplex = [] * (P // m)
     def __init__(self, global_best_frog):
         self.global_best_frog = global_best_frog
         self.best_frog = individual()
         self.worst_frog = individual()
-        self.D = [] * luggage_num
-        self.t = [] * luggage_num
+        self.D = [0 for _ in range(luggage_num)]
+        self.t = [0 for _ in range(luggage_num)]
         self.worst_frog_new = individual()
-        self.xw_new = [] * luggage_num
+        self.xw_new = [0 for _ in range(luggage_num)]
+        self.frog_in_memeplex = [0 for _ in range(P//m)]
 
-    def local_sesarch(self):
+
+    def local_search(self):
         for i in range(iMax):
             self.sort_memeplex()
             self.mk_worst_new(self.best_frog.x)
@@ -93,6 +101,7 @@ class memeplex:
             random_frog.calc_fitness()
             self.worst_frog.x = random_frog.x
             self.worst_frog.fitness = random_frog.fitness
+        # print(f'best={self.best_frog.x}, worst={self.worst_frog.x}')
 
     def sort_memeplex(self):
         self.frog_in_memeplelx = sorted(self.frog_in_memeplex, key=lambda frog: frog.fitness, reverse = True)
@@ -113,11 +122,12 @@ class memeplex:
 
 
 class individual:
-    x = []
-    fitness = 0
     def __init__(self):
+        self.x = [0 for _ in range(luggage_num)]
         for i in range(luggage_num):
-            self.x.append(random.randint(0, 1))
+            self.x[i] = random.randint(0, 1)
+        self.fitness = 0
+        
     
     def calc_fitness(self):
         self.repair_x()
@@ -186,9 +196,14 @@ frog_population = population()
 frog_population.init_population()
 frog_population.calc_fitness_population()
 frog_population.sort_population()
-if not frog_population.is_termination:
+while 1:
     frog_population.partition()
     frog_population.search()
     frog_population.mutation()
-    is_termination = frog_population.judge_termmination()
+    is_termination = frog_population.judge_termination()
+    if frog_population.is_termination:
+        break
+    print(f'x={frog_population.global_best_frog.x}')
+    print(f'fitness={frog_population.best_fitness}')
+        
 print(f'answer is {frog_population.global_best_frog.x}')
