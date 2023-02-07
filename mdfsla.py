@@ -19,6 +19,10 @@ class population:
     memeplex_list = [] * m
     def __init__(self):
         self.global_best_frog = individual()
+        self.is_termination = False
+        self.best_fitness = 0
+        self.former_best_fitness = 0
+        self.delta = 0
 
     def init_population(self):
         for i in range(P):
@@ -31,6 +35,8 @@ class population:
     def sort_population(self):
         self.frog_list = sorted(self.frog_list, key=lambda frog: frog.fitness, reverse = True)
         self.global_best_frog = self.frog_list[0]
+        self.former_best_fitness = self.best_fitness
+        self.best_fitness = self.global_best_frog.fitness
     
     def partition(self):
         for k in range(m):
@@ -46,6 +52,14 @@ class population:
     def mutation(self):
         for i in range(P):
             self.frog_list[i].ind_mutation()
+    
+    def judge_termination(self):
+        self.sort_population()
+        if self.best_fitness == self.former_best_fitness:
+            self.delta += 1
+        if self.delta >= math.ceil(iMax/20.0):
+            self.is_termination = True
+
 
 
 
@@ -168,6 +182,9 @@ frog_population = population()
 frog_population.init_population()
 frog_population.calc_fitness_population()
 frog_population.sort_population()
-frog_population.partition()
-frog_population.search()
-frog_population.mutation()
+if not frog_population.is_termination:
+    frog_population.partition()
+    frog_population.search()
+    frog_population.mutation()
+    is_termination = frog_population.judge_termmination()
+print(f'answer is {frog_population.global_best_frog.x}')
