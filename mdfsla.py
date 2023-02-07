@@ -12,6 +12,7 @@ luggage_num = 0
 capacity = 0
 p_list = []
 w_list = []
+s_list = []
 
 
 class population:
@@ -26,7 +27,7 @@ class population:
 
     def init_population(self):
         for i in range(P):
-            self.frog_list.append(individual(luggage_num, w_list, capacity, p_list))
+            self.frog_list.append(individual())
     
     def calc_fitness_population(self):
         for i in range(P):
@@ -61,10 +62,8 @@ class population:
             self.is_termination = True
 
 
-
-
 class memeplex:
-    frog_in_memeplex = [] * (P / m)
+    frog_in_memeplex = [] * (P // m)
     def __init__(self, global_best_frog):
         self.global_best_frog = global_best_frog
         self.best_frog = individual()
@@ -113,7 +112,6 @@ class memeplex:
         self.worst_frog_new.x = self.xw_new
 
 
-
 class individual:
     x = []
     fitness = 0
@@ -122,7 +120,7 @@ class individual:
             self.x.append(random.randint(0, 1))
     
     def calc_fitness(self):
-        self.repair_x(self.x)
+        self.repair_x()
         p_in_bag = 0
         for i in range(luggage_num):
             if self.x[i] == 1:
@@ -160,23 +158,29 @@ class individual:
 
 #main
 args = sys.argv
-c_filename = args[0] #capacity
-w_filename = args[1] #weight
-p_filename = args[2] #profit
-s_filename = args[3] #selection
+c_filename = "p01_c.txt" #capacity
+w_filename = "p01_w.txt" #weight
+p_filename = "p01_p.txt" #profit
+s_filename = "p01_s.txt" #selection
+
 
 cf = open(c_filename, 'r')
-capacity = cf.readlines()
+capacity = int(cf.readline().replace('\n', ''))
 
 wf = open(w_filename, 'r')
-w_list = wf.readlines()
+for i in wf:
+    w_list.append(int(i.strip().replace('\n', '')))
 luggage_num = len(w_list)
 
 pf = open(p_filename, 'r')
-p_list = pf.readlines()
+for i in pf:
+    p_list.append(int(i.strip().replace('\n', '')))
+
 
 sf = open(s_filename, 'r')
-s_list = sf.readlines()
+for i in sf:
+    s_list.append(int(i.strip().replace('\n', '')))
+
 
 frog_population = population()
 frog_population.init_population()
