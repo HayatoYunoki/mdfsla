@@ -32,8 +32,6 @@ class population:
     def calc_fitness_population(self):
         for i in range(P):
             self.frog_list[i].calc_fitness()
-        # for i in range(P):
-        #     print(self.frog_list[i].x)
     
     def sort_population(self):
         self.frog_list = sorted(self.frog_list, key=lambda frog: frog.fitness, reverse = True)
@@ -47,11 +45,6 @@ class population:
         for j in range(m):
             for i in range(P//m):
                 self.memeplex_list[j].frog_in_memeplex[i] = self.frog_list[i*m + j]
-        # self.memeplex_list[0].frog_in_memeplex[0] = self.frog_list[0]
-     
-            
-        # print(self.memeplex_list[0].frog_in_memeplex[0].x)
-        # print(self.memeplex_list[9].frog_in_memeplex[0].x)
     
     def search(self):
         for i in range(m):
@@ -128,7 +121,6 @@ class individual:
             self.x[i] = random.randint(0, 1)
         self.fitness = 0
         
-    
     def calc_fitness(self):
         self.repair_x()
         p_in_bag = 0
@@ -163,15 +155,16 @@ class individual:
                 if self.x[i] == 1:
                     self.x[i] = 0
                 else:
-                    self.x[i] = 1    
+                    self.x[i] = 1  
+        self.calc_fitness()  
 
 
 #main
 args = sys.argv
-c_filename = "p01_c.txt" #capacity
-w_filename = "p01_w.txt" #weight
-p_filename = "p01_p.txt" #profit
-s_filename = "p01_s.txt" #selection
+c_filename = "p04_c.txt" #capacity
+w_filename = "p04_w.txt" #weight
+p_filename = "p04_p.txt" #profit
+s_filename = "p04_s.txt" #selection
 
 
 cf = open(c_filename, 'r')
@@ -203,7 +196,7 @@ while 1:
     is_termination = frog_population.judge_termination()
     if frog_population.is_termination:
         break
-    print(f'x={frog_population.global_best_frog.x}')
-    print(f'fitness={frog_population.best_fitness}')
         
 print(f'answer is {frog_population.global_best_frog.x}')
+
+
