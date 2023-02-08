@@ -161,10 +161,10 @@ class individual:
 
 #main
 args = sys.argv
-c_filename = "p04_c.txt" #capacity
-w_filename = "p04_w.txt" #weight
-p_filename = "p04_p.txt" #profit
-s_filename = "p04_s.txt" #selection
+c_filename = "p08_c.txt" #capacity
+w_filename = "p08_w.txt" #weight
+p_filename = "p08_p.txt" #profit
+s_filename = "p08_s.txt" #selection
 
 
 cf = open(c_filename, 'r')
@@ -197,6 +197,13 @@ while 1:
     if frog_population.is_termination:
         break
         
-print(f'answer is {frog_population.global_best_frog.x}')
-
+print(f'created answer is {frog_population.global_best_frog.x}, fitness={frog_population.global_best_frog.fitness}')
+ans_frog = individual()
+ans_frog.x = s_list
+ans_frog.calc_fitness()
+print(f'real answer is {s_list}, fitness={ans_frog.fitness}')
+if frog_population.global_best_frog.x == ans_frog.x:
+    print('search succeeded')
+else:
+    print('search failed')
 
