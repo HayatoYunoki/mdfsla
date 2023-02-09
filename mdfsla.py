@@ -7,7 +7,7 @@ m = 10 #number of memeplexes
 iMax = 500 #number of iterations
 alpha = 0.4 #parameter for discrete
 pm = 0.06 #mutation rate
-p_max = 100000 #profit max
+p_max = 10000000 #profit max
 luggage_num = 0
 capacity = 0
 p_list = []
@@ -58,7 +58,7 @@ class population:
         self.sort_population()
         if self.best_fitness == self.former_best_fitness:
             self.delta += 1
-        if self.delta >= math.ceil(iMax/20.0):
+        if self.delta >= math.ceil(iMax/20.0): #収束条件
             self.is_termination = True
 
 
@@ -72,7 +72,6 @@ class memeplex:
         self.worst_frog_new = individual()
         self.xw_new = [0 for _ in range(luggage_num)]
         self.frog_in_memeplex = [0 for _ in range(P//m)]
-
 
     def local_search(self):
         for i in range(iMax):
@@ -94,7 +93,6 @@ class memeplex:
             random_frog.calc_fitness()
             self.worst_frog.x = random_frog.x
             self.worst_frog.fitness = random_frog.fitness
-        # print(f'best={self.best_frog.x}, worst={self.worst_frog.x}')
 
     def sort_memeplex(self):
         self.frog_in_memeplelx = sorted(self.frog_in_memeplex, key=lambda frog: frog.fitness, reverse = True)
@@ -179,11 +177,9 @@ pf = open(p_filename, 'r')
 for i in pf:
     p_list.append(int(i.strip().replace('\n', '')))
 
-
 sf = open(s_filename, 'r')
 for i in sf:
     s_list.append(int(i.strip().replace('\n', '')))
-
 
 frog_population = population()
 frog_population.init_population()
@@ -191,9 +187,11 @@ frog_population.calc_fitness_population()
 frog_population.sort_population()
 while 1:
     frog_population.partition()
+    print(f'best fitness={frog_population.memeplex_list[0].frog_in_memeplex[0].fitness}')
     frog_population.search()
     frog_population.mutation()
     is_termination = frog_population.judge_termination()
+    # print(f'fitness={frog_population.frog_list[0].fitness}, {frog_population.frog_list[1].fitness}, {frog_population.frog_list[2].fitness}')
     if frog_population.is_termination:
         break
         
