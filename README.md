@@ -1,0 +1,3 @@
+- B3で受講していた「人工知能」の課題
+- カエル探索:Shuggled Frog-Leaping Algorithm(Shuffled frog leaping algorithm and its application to 0/1 knapsack problem, Kaushik Kumar Bhattacharjee, S.P. Sarmah, 2014)を用いてナップザック問題を解く
+- バックアップ用
